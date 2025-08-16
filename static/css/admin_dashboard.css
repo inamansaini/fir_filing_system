@@ -34,7 +34,6 @@
     }
 }
 
-
 *, *::before, *::after {
     box-sizing: border-box; 
 }
@@ -86,10 +85,16 @@ button, .status-select {
     box-shadow: 0 4px 8px rgba(0,0,0,0.25);
 }
 
+.dashboard-container .controls-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
 .dashboard-container button {
     background-color: #3B82F6; 
     color: #FFFFFF; 
-    margin: 5px;
 }
 
 .dashboard-container button:hover {
@@ -123,6 +128,10 @@ main {
     border: 1px solid #374151; 
 }
 
+.fir-reports-container {
+    overflow-x: auto;
+}
+
 .dashboard-container {
     text-align: center;
 }
@@ -135,6 +144,7 @@ main {
 
 #firSearchInput {
     width: 100%;
+    max-width: 400px;
     padding: 12px 15px;
     margin-bottom: 1.5rem;
     border: 1px solid #374151;
@@ -143,6 +153,9 @@ main {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     background-color: #111827;
     color: #F9FAFB;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #firSearchInput:focus {
@@ -155,12 +168,14 @@ main {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    min-width: 800px;
 }
 
 .fir-table th, .fir-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #374151;
+    white-space: nowrap;
 }
 
 .fir-table thead th {
@@ -201,13 +216,14 @@ main {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 1rem;
 }
 
 .modal-content {
     background: #1F2937; 
     padding: 0;
     border-radius: 12px;
-    width: 90%;
+    width: 100%;
     max-width: 900px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     animation: modalFadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
@@ -224,8 +240,7 @@ main {
     border-bottom: 1px solid #374151;
     padding: 1.5rem 2rem;
     margin-bottom: 0;
-    position: sticky;
-    top: 0;
+    flex-shrink: 0;
     background: #1F2937; 
     z-index: 1;
 }
@@ -249,7 +264,8 @@ main {
     transform: rotate(90deg);
 }
 
-#fir-details-body {
+#fir-details-body,
+.settings-body {
     padding: 1.5rem 2rem;
     line-height: 1.8;
     overflow-y: auto;
@@ -261,11 +277,6 @@ main {
 
 #fir-details-body strong {
     color: #F9FAFB;
-}
-
-.settings-body {
-    padding: 1.5rem 2rem;
-    overflow-y: auto;
 }
 
 .settings-section {
@@ -340,20 +351,8 @@ main {
     margin-top: 0;
 }
 
-#document-viewer {
-    flex-direction: column;
-}
-
-#viewer-content {
-    padding: 1rem;
-    text-align: center;
-    background-color: #111827; 
-    border-radius: 8px;
-    margin: 0 1rem 1rem 1rem;
-}
-
 #viewer-content img {
-    max-width: 75%;
+    max-width: 100%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -363,51 +362,37 @@ main {
     .dashboard-header {
         flex-direction: column;
         text-align: center;
+        gap: 0.5rem;
+        padding: 1rem;
     }
+    
     .dashboard-header h2 {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
+    
     main {
         padding: 1rem;
     }
+    
     .dashboard-container, .fir-reports-container {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
     }
+
+    .dashboard-container .controls-wrapper,
     .dashboard-container button {
         display: block;
         width: 100%;
+    }
+
+    .dashboard-container button {
         margin: 10px 0;
     }
-    .fir-table thead {
-        display: none;
+    
+    #firSearchInput {
+        max-width: 100%;
     }
-    .fir-table, .fir-table tbody, .fir-table tr, .fir-table td {
-        display: block;
-        width: 100%;
-    }
-    .fir-table tr {
-        margin-bottom: 1rem;
-        border: 1px solid #374151;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .fir-table td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-    }
-    .fir-table td:not(:last-child) {
-        border-bottom: 1px solid #374151;
-    }
-    .fir-table td:before {
-        content: attr(data-label);
-        position: absolute;
-        left: 15px;
-        width: calc(50% - 30px);
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
-        font-weight: bold;
-        color: #D1D5DB; 
+
+    .modal-header, #fir-details-body, .settings-body {
+        padding: 1.5rem 1rem;
     }
 }

@@ -1,16 +1,12 @@
-// This JavaScript file remains unchanged as the responsiveness issues are handled by CSS.
 document.addEventListener('DOMContentLoaded', async () => {
-    // Fetches police station data on page load
     await fetchAndStorePoliceStations(); 
     
-    // Initial setup calls for various UI components
     checkCategory();
     generateAccusedNameInputs();
     fetchUserFIRs();
     setDateTimeMax();
     loadChatHistory(); 
 
-    // --- Event Listeners ---
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
     document.getElementById('fir-form').addEventListener('submit', handleFormSubmit);
     document.getElementById('category').addEventListener('change', checkCategory);
@@ -20,15 +16,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('police-station').addEventListener('change', updateEmergencyContacts);
     document.getElementById('fir-list').addEventListener('click', handleFirListActions);
     document.querySelector('.close-modal').addEventListener('click', closeModal);
-    
-    // Close modal if user clicks outside of it
     window.addEventListener('click', (event) => {
         if (event.target === document.getElementById('fir-details-modal')) {
             closeModal();
         }
     });
     
-    // Chatbot event listeners
     document.getElementById('send-message').addEventListener('click', sendMessage);
     document.getElementById('user-message').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
@@ -37,12 +30,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('suggested-prompts').addEventListener('click', handlePromptClick);
 });
 
-// --- Global Data Storage ---
 let policeStationData = {};
 
 const stateDistricts = {
     "Haryana": ["Bhiwani", "Rohtak"],
-    "Punjab": [] // Can be populated later
+    "Punjab": [] 
 };
 
 const policeStationContacts = {
@@ -57,21 +49,17 @@ const policeStationContacts = {
     "Meham Police Station": "01257-233230"
 };
 
-// --- API & Data Functions ---
 async function fetchAndStorePoliceStations() {
     try {
-        // This assumes you have an API endpoint at '/api/police_stations'
         const response = await fetch('/api/police_stations');
         if (!response.ok) throw new Error('Failed to fetch police stations');
         policeStationData = await response.json();
     } catch (error) {
         console.error("Error fetching police stations:", error);
-        // Using a simple alert for now, but a more robust UI notification would be better.
         alert("Could not load police station data. Please refresh the page.");
     }
 }
 
-// --- Event Handlers ---
 function handleLogout() {
     fetch('/logout', { method: 'POST' })
         .then(res => res.json())
@@ -99,14 +87,19 @@ function handleFirListActions(event) {
     }
 }
 
-// --- UI Manipulation Functions ---
 function generateAccusedNameInputs() {
     const numAccused = document.getElementById('num-accused').value;
     const container = document.getElementById('accused-names-container');
-    container.innerHTML = ''; // Clear previous inputs
+    container.innerHTML = ''; 
 
     if (numAccused === 'Unknown') {
-        // No inputs needed if the number is unknown
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+        formGroup.innerHTML = `
+            <label for="accused_name_1">Name of Accused:</label>
+            <input type="text" id="accused_name_1" name="accused_names[]" value="Unknown" readonly class="disabled-input">
+        `;
+        container.appendChild(formGroup);
         return;
     }
 
@@ -134,7 +127,7 @@ function checkCategory() {
     const otherField = document.getElementById("other-category-field");
     const otherInput = document.getElementById("other-category-input");
     const isOther = category === "Other";
-    otherField.style.display = isOther ? "flex" : "none"; // Use flex to match other form-groups
+    otherField.style.display = isOther ? "block" : "none";
     otherInput.required = isOther;
 }
 
@@ -147,7 +140,6 @@ function populateDistricts() {
             districtSelect.add(new Option(district, district));
         });
     }
-    // Reset and repopulate police stations
     populatePoliceStations();
 }
 
@@ -179,11 +171,10 @@ function updateEmergencyContacts() {
     if (selectedOption && selectedOption.dataset.contact) {
         emergencyContactSpan.textContent = selectedOption.dataset.contact;
     } else {
-        emergencyContactSpan.textContent = "112"; // Default emergency number
+        emergencyContactSpan.textContent = "112";
     }
 }
 
-// --- FIR Submission and Management ---
 async function submitFIRForm() {
     try {
         const response = await fetch('/submit_fir', {
@@ -248,40 +239,39 @@ function updateFIRList(firs) {
         return;
     }
     firs.forEach(fir => {
+        const statusClass = `status-${fir.fir_status.toLowerCase().replace(/\s+/g, '-')}`;
         const row = firListBody.insertRow();
         row.innerHTML = `
             <td>${fir._id}</td>
-            <td>${fir.fir_status}</td>
+            <td><span class="status-badge ${statusClass}">${fir.fir_status}</span></td>
             <td>${fir.assigned_officer_name || 'Unassigned'}</td>
             <td>${new Date(fir.filed_date).toLocaleDateString()}</td>
             <td>
-                <button class="view-details-btn view-btn" data-fir-id="${fir._id}">🔍 View</button>
+                <button class="view-btn" data-fir-id="${fir._id}">🔍 View</button>
                 <button class="cancel-btn" data-fir-id="${fir._id}" ${fir.fir_status !== 'Pending' ? 'disabled' : ''}>❌ Cancel</button>
             </td>
         `;
     });
 }
 
-// --- Modal Display ---
 function displayFIRDetails(fir) {
     const detailsDiv = document.getElementById('fir-details');
-    // Using a template literal for cleaner HTML structure
     detailsDiv.innerHTML = `
-        <p><strong>FIR ID:</strong> <span>${fir._id}</span></p>
-        <p><strong>Status:</strong> <span>${fir.fir_status}</span></p>
-        <p><strong>Investigating Officer:</strong> <span>${fir.assigned_officer_name || 'Unassigned'}</span></p>
-        <p><strong>Filed Date:</strong> <span>${new Date(fir.filed_date).toLocaleString()}</span></p>
-        <p><strong>Complainant:</strong> <span>${fir.user_name}</span></p>
-        <p><strong>Mobile:</strong> <span>${fir.mobile}</span></p>
-        <p><strong>Address:</strong> <span>${fir.user_address}</span></p>
+        <p><strong>FIR ID:</strong> ${fir._id}</p>
+        <p><strong>Status:</strong> ${fir.fir_status}</p>
+        <p><strong>Investigating Officer:</strong> ${fir.assigned_officer_name || 'Unassigned'}</p>
+        <p><strong>Filed Date:</strong> ${new Date(fir.filed_date).toLocaleString()}</p>
+        <p><strong>Complainant:</strong> ${fir.user_name}</p>
+        <p><strong>Mobile:</strong> ${fir.mobile}</p>
+        <p><strong>Address:</strong> ${fir.user_address}</p>
         <hr>
-        <p><strong>Incident Date:</strong> <span>${new Date(fir.incident_date).toLocaleString()}</span></p>
-        <p><strong>Location:</strong> <span>${fir.location}</span></p>
-        <p><strong>Category:</strong> <span>${fir.category} ${fir.other_category ? `(${fir.other_category})` : ''}</span></p>
-        <p><strong>Accused Person(s):</strong> <span>${fir.accused_names && fir.accused_names.length > 0 ? fir.accused_names.join(', ') : 'N/A'}</span></p>
-        <p><strong>Police Station:</strong> <span>${fir.police_station}</span></p>
+        <p><strong>Incident Date:</strong> ${new Date(fir.incident_date).toLocaleString()}</p>
+        <p><strong>Location:</strong> ${fir.location}</p>
+        <p><strong>Category:</strong> ${fir.category} ${fir.other_category ? `(${fir.other_category})` : ''}</p>
+        <p><strong>Accused Person(s):</strong> ${fir.accused_names && fir.accused_names.length > 0 ? fir.accused_names.join(', ') : 'N/A'}</p>
+        <p><strong>Police Station:</strong> ${fir.police_station}</p>
         <p><strong>Description:</strong></p>
-        <div>${fir.description.replace(/\n/g, '<br>')}</div>
+        <p>${fir.description}</p>
         <hr>
         <h4>Supporting Documents:</h4>
         <div id="fir-documents-preview"></div>
@@ -319,7 +309,6 @@ function closeModal() {
     document.getElementById('fir-details-modal').style.display = 'none';
 }
 
-// --- Chatbot Functions ---
 async function loadChatHistory() {
     const chatbox = document.getElementById('chatbox');
     chatbox.innerHTML = ''; 

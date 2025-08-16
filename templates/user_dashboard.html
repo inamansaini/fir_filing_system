@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- This viewport meta tag is crucial for responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard - Smart FIR System</title>
-    <!-- Make sure the path to your CSS file is correct -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}">
 </head>
 <body>
@@ -72,8 +70,7 @@
                             </select>
                         </div>
                         <div id="accused-names-container">
-                            <!-- Accused name fields will be generated here by JS -->
-                        </div>
+                            </div>
                         <div class="form-group">
                             <label for="incident-date">Incident Date & Time:</label>
                             <input type="datetime-local" id="incident-date" name="incident-date" required>
@@ -139,7 +136,6 @@
                 </div>
                 <div class="chat-container">
                     <div id="chatbox">
-                        <!-- Chat messages will appear here -->
                     </div>
                     <div class="suggested-prompts" id="suggested-prompts">
                         <button class="prompt-btn">What is an FIR?</button>
@@ -156,18 +152,15 @@
         </div>
     </div>
 
-    <!-- Modal for displaying FIR details -->
     <div id="fir-details-modal" class="modal-overlay">
         <div id="fir-details-content">
             <span class="close-modal">&times;</span>
             <h2>FIR Details</h2>
             <div id="fir-details">
-                <!-- FIR details will be populated here by JS -->
             </div>
         </div>
     </div>
 
-    <!-- Make sure the path to your JS file is correct -->
-    <script src="user_dashboard.js" defer></script>
+    <script src="{{ url_for('static', filename='js/user_dashboard.js') }}" defer></script>
 </body>
 </html>
