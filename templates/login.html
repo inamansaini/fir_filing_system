@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Sign In</h2>
+        <form id="loginForm">
+            <label for="role">Select Your Role:</label>
+            <select id="role" name="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <div id="user-login">
+                <label for="user-username">Username</label>
+                <input type="text" id="user-username" placeholder="Enter Username" required>
+                <label for="user-password">Password</label>
+                <input type="password" id="user-password" placeholder="Enter Password" required>
+                <button type="submit">Login</button>
+                <p class="register-link">Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+            </div>
+
+            <div id="admin-login" style="display:none;">
+                <label for="admin-id">Admin ID</label>
+                <input type="text" id="admin-id" placeholder="Enter Admin ID" required>
+                <label for="admin-pass">Password</label>
+                <input type="password" id="admin-pass" placeholder="Enter Password" required>
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const roleSelect = document.getElementById('role');
+            const userLoginDiv = document.getElementById('user-login');
+            const adminLoginDiv = document.getElementById('admin-login');
+
+            const userUsername = document.getElementById('user-username');
+            const userPassword = document.getElementById('user-password');
+            const adminId = document.getElementById('admin-id');
+            const adminPass = document.getElementById('admin-pass');
+
+            function showToast(message, isError = false) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = `toast show ${isError ? 'error' : ''}`;
+                setTimeout(() => {
+                    toast.className = toast.className.replace('show', '');
+                }, 3000);
+            }
+            
+            function updateFormState(selectedRole) {
+                if (selectedRole === 'user') {
+                    userLoginDiv.style.display = 'block';
+                    adminLoginDiv.style.display = 'none';
+
+                    userUsername.disabled = false;
+                    userPassword.disabled = false;
+                    adminId.disabled = true;
+                    adminPass.disabled = true;
+                } else { 
+                    userLoginDiv.style.display = 'none';
+                    adminLoginDiv.style.display = 'block';
+
+                    userUsername.disabled = true;
+                    userPassword.disabled = true;
+                    adminId.disabled = false;
+                    adminPass.disabled = false;
+                }
+            }
+
+            roleSelect.addEventListener('change', function() {
+                updateFormState(this.value);
+            });
+            
+            updateFormState(roleSelect.value);
+
+
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const selectedRole = roleSelect.value;
+                let url;
+                let payload;
+
+                if (selectedRole === 'user') {
+                    const username = userUsername.value.trim();
+                    const password = userPassword.value.trim();
+
+                    if (!username || !password) {
+                        showToast('Please enter both username and password.', true);
+                        return;
+                    }
+                    url = '/user_login';
+                    payload = { username, password };
+
+                } else { 
+                    const adminIdValue = adminId.value.trim();
+                    const adminPassValue = adminPass.value.trim();
+
+                    if (!adminIdValue || !adminPassValue) {
+                        showToast('Please enter Admin ID and Password.', true);
+                        return;
+                    }
+                    url = '/admin_login';
+                    payload = { admin_id: adminIdValue, password: adminPassValue };
+                }
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        showToast(data.message || 'Login successful!');
+                        window.location.href = data.redirect;
+                    } else {
+                        showToast(data.error || 'Invalid credentials.', true);
+                    }
+                } catch (error) {
+                    console.error('Login Error:', error);
+                    showToast('A network error occurred. Please try again.', true);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

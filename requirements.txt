@@ -1,0 +1,7 @@
+Flask
+pymongo
+Flask-Bcrypt
+python-dotenv
+certifi
+cloudinary
+bardapi

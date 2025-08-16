@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Officer Assignments - {{ station_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_officers.css') }}">
+    
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <h2>Assign Investigating Officers: {{ station_name }}</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">⬅️ Back to Dashboard</a>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h3>Pending and Investigating FIRs</h3>
+        {% if firs %}
+        <table class="assignment-table">
+            <thead>
+                <tr>
+                    <th>FIR ID</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Currently Assigned</th>
+                    <th>Assign Officer</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fir in firs %}
+                <tr>
+                    <td>{{ fir._id }}</td>
+                    <td>{{ fir.category }}</td>
+                    <td>{{ fir.fir_status }}</td>
+                    <td><strong>{{ fir.get('assigned_officer_name', 'Unassigned') }}</strong></td>
+                    <td>
+                        <form action="{{ url_for('assign_officer') }}" method="POST">
+                            <input type="hidden" name="fir_id" value="{{ fir._id }}">
+                            <select name="officer_id" required>
+                                <option value="">Select an Officer...</option>
+                                {% for officer_name in station_officers %}
+                                    <option value="{{ officer_name }}" {% if fir.get('assigned_officer_name') == officer_name %}selected{% endif %}>
+                                        {{ officer_name }}
+                                    </option>
+                                {% endfor %}
+                                </select>
+                    </td>
+                    <td>
+                            <button type="submit">Assign</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>There are no active FIRs that require an officer assignment at this station.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

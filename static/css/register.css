@@ -1,0 +1,157 @@
+:root {
+    --primary-color: #3B82F6;
+    --primary-color-dark: #60A5FA;
+    --background-color: #111827;
+    --container-background: #1F2937;
+    --text-color: #F9FAFB;
+    --label-color: #D1D5DB;
+    --border-color: #374151;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --success-color: #10B981;
+    --error-color: #EF4444;
+    --font-family: 'Montserrat', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-container {
+    background-color: var(--container-background);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+h2 {
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--label-color);
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="tel"],
+form input[type="email"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: var(--font-family);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+}
+
+form button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: #111827;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+form button:active {
+    transform: scale(0.98);
+}
+
+
+.register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--label-color);
+}
+
+.register-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.toast {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: var(--container-background);
+    color: var(--text-color);
+    padding: 16px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast.error {
+    background-color: var(--error-color);
+    border-color: var(--error-color);
+    color: #fff;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 25px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Analytics - {{ station_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analytics.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <h2>📊 Crime Analytics: {{ station_name }}</h2>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="back-link">📋 Back to Dashboard</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="analytics-container">
+            <h3>FIR Category Distribution</h3>
+            <p>This chart shows the percentage of different crime categories reported to your station.</p>
+            
+            <div id="loading-message"><p>Loading analytics data, please wait...</p></div>
+            
+            <div class="chart-container" style="display:none;">
+                <canvas id="crimeChart"></canvas>
+            </div>
+            
+            <div id="summary-container" style="display:none;">
+                <h3>Data Summary</h3>
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Crime Category</th>
+                            <th>Number of FIRs</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summary-tbody">
+                        </tbody>
+                </table>
+            </div>
+
+            <div id="no-data-message" style="display:none;"><p>No FIR data found for this station to generate analytics.</p></div>
+        </div>
+    </main>
+    
+    <script src="{{ url_for('static', filename='js/analytics.js') }}" defer></script>
+</body>
+</html>

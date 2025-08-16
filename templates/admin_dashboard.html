@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - {{ station_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <h2>Admin Dashboard: {{ station_name }}</h2>
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <h3>Admin Controls</h3>
+            <button onclick="toggleReports()">📋 View FIR Reports</button>
+            <button onclick="location.href='{{ url_for('admin_analytics') }}'">📊 View Crime Analytics</button>
+            <button onclick="location.href='{{ url_for('manage_officers') }}'">👤 Assign Officers</button>
+            <button id="open-settings-btn">⚙️ Settings</button>
+        </div>
+
+        <div id="fir-reports" class="fir-reports-container" style="display: block;">
+            <h3>All FIR Reports</h3>
+            
+            <input type="text" id="firSearchInput" onkeyup="searchFIR()" placeholder="🔍 Search by FIR ID...">
+
+            {% if firs %}
+            <table class="fir-table" id="firTable">
+                <thead>
+                    <tr>
+                        <th>FIR ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Assigned Officer</th>
+                        <th>Filed Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fir in firs %}
+                    <tr>
+                        <td>{{ fir._id }}</td>
+                        <td>{{ fir.user_name }}</td>
+                        <td>
+                            {{ fir.category }}
+                            {% if fir.other_category %} ({{ fir.other_category }}){% endif %}
+                        </td>
+                        <td>
+                            <select class="status-select" data-fir-id="{{ fir._id }}">
+                                <option value="Pending" {% if fir.fir_status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Under Investigation" {% if fir.fir_status == 'Under Investigation' %}selected{% endif %}>Under Investigation</option>
+                                <option value="Resolved" {% if fir.fir_status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                            </select>
+                        </td>
+                        <td>{{ fir.get('assigned_officer_name', 'Unassigned') }}</td>
+                        <td>{{ fir.filed_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <button class="view-details-btn" data-fir-id="{{ fir._id }}">View Details</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>No FIR reports have been filed yet.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <div id="fir-details-modal" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>FIR Details</h2>
+                <span class="close-modal">&times;</span>
+            </header>
+            <div id="fir-details-body">
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>⚙️ Admin Settings</h2>
+                <span class="close-modal" id="close-settings-modal">&times;</span>
+            </header>
+            <div class="settings-body">
+                <div class="settings-section">
+                    <h4>Manage Investigating Officers</h4>
+                    <div id="officer-list-container">
+                    </div>
+                    <hr>
+                    <h5>Add New Officer</h5>
+                    <form id="add-officer-form">
+                        <div class="form-group">
+                            <label for="officer-name">Officer Name</label>
+                            <input type="text" id="officer-name" placeholder="e.g., Inspector Vijay Kumar" required>
+                        </div>
+                         <div class="form-group">
+                            <label for="officer-badge">Badge ID / Service Number</label>
+                            <input type="text" id="officer-badge" placeholder="e.g., HRP-12345" required>
+                        </div>
+                        <button type="submit" class="action-btn">Add Officer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}" defer></script>
+</body>
+</html>

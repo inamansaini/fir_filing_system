@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #111827;
+    color: #F9FAFB;
+    margin: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.dashboard-header {
+    background: linear-gradient(90deg, #2563EB, #3B82F6);
+    color: #FFFFFF;
+    padding: 0.71rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.back-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+main h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #3B82F6;
+}
+
+main p {
+    padding: 2rem;
+    background: #1F2937;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #D1D5DB;
+    border: 1px solid #374151;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #10b981;
+}
+
+.alert-danger, .alert-error {
+    background-color: #ef4444;
+}
+
+.assignment-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1F2937;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border: 1px solid #374151;
+}
+
+.assignment-table th, .assignment-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #374151;
+}
+
+.assignment-table thead th {
+    background-color: #374151;
+    color: #D1D5DB;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.assignment-table tbody tr:hover {
+    background-color: #374151;
+}
+
+.assignment-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.assignment-table select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    background-color: #111827;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: #F9FAFB;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.assignment-table select:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.assignment-table button {
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    background-color: #3B82F6;
+    color: #FFFFFF;
+    font-weight: 500;
+}
+
+.assignment-table button:hover {
+    background-color: #60A5FA;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    .dashboard-header h2 {
+        margin-bottom: 1rem;
+    }
+    main {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .assignment-table thead {
+        display: none;
+    }
+    .assignment-table, .assignment-table tbody, .assignment-table tr, .assignment-table td {
+        display: block;
+        width: 100%;
+    }
+    .assignment-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #374151;
+        border-radius: 8px;
+    }
+    .assignment-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+    .assignment-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #D1D5DB;
+    }
+    .assignment-table td:last-child {
+        border-bottom: none;
+    }
+}
