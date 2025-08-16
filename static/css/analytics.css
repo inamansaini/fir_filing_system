@@ -47,7 +47,7 @@ body {
     padding: 10px 20px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    white-space: nowrap; /* Prevent link from breaking into two lines */
+    white-space: nowrap;
 }
 
 .back-link:hover {
@@ -65,7 +65,7 @@ main {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border: 1px solid #374151; 
-    overflow-x: auto; /* ADDED: This makes the container scrollable if table overflows */
+    overflow-x: auto;
 }
 
 .analytics-container h3 {
@@ -82,8 +82,8 @@ main {
 
 .chart-container {
     position: relative;
-    max-width: 700px; /* Increased max-width slightly */
-    min-height: 350px; /* Give it a minimum height */
+    max-width: 700px;
+    min-height: 350px;
     width: 100%;
     margin: 0 auto 2rem auto;
 }
@@ -100,7 +100,7 @@ main {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
-    min-width: 600px; /* Ensure table has a minimum width */
+    min-width: 600px;
 }
 
 .summary-table th, .summary-table td {
@@ -135,20 +135,16 @@ main {
     font-weight: 600;
 }
 
-
-/* ---------------------------------- */
-/* ----- 📱 RESPONSIVE STYLES 📱 ----- */
-/* ---------------------------------- */
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column;
         text-align: center;
-        gap: 1rem; /* Added gap for spacing */
+        gap: 1rem;
         padding: 1rem;
     }
     
     .dashboard-header h2 {
-        margin-bottom: 0; /* Removed margin */
+        margin-bottom: 0;
     }
     
     main {
@@ -160,6 +156,6 @@ main {
     }
 
     .chart-container {
-        min-height: 300px; /* Adjust chart height for mobile */
+        min-height: 300px;
     }
 }

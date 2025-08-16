@@ -47,7 +47,7 @@ body {
     padding: 10px 20px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    white-space: nowrap; /* Prevent link from breaking into two lines */
+    white-space: nowrap;
 }
 
 .back-link:hover {
@@ -59,7 +59,7 @@ main {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
-    overflow-x: auto; /* ADDED: This is the key fix to make the table scrollable */
+    overflow-x: auto;
 }
 
 main h3 {
@@ -103,14 +103,14 @@ main p {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     border: 1px solid #374151;
-    min-width: 900px; /* ADDED: Give the table a minimum width to prevent content squishing */
+    min-width: 900px;
 }
 
 .assignment-table th, .assignment-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #374151;
-    white-space: nowrap; /* ADDED: Keeps content like names on a single line */
+    white-space: nowrap;
 }
 
 .assignment-table thead th {
@@ -131,7 +131,7 @@ main p {
 
 .assignment-table select {
     width: 100%;
-    min-width: 200px; /* Give the select dropdown a reasonable minimum width */
+    min-width: 200px;
     padding: 8px 12px;
     border: 1px solid #374151;
     border-radius: 8px;
@@ -166,15 +166,11 @@ main p {
     transform: translateY(-2px);
 }
 
-
-/* ---------------------------------- */
-/* ----- 📱 RESPONSIVE STYLES 📱 ----- */
-/* ---------------------------------- */
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column;
         text-align: center;
-        gap: 1rem; /* Add spacing between title and link */
+        gap: 1rem;
         padding: 1rem;
     }
 
@@ -186,5 +182,3 @@ main p {
         padding: 1rem;
     }
 }
-
-/* REMOVED the entire broken @media (max-width: 992px) block that was causing the layout issues. */
