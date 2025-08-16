@@ -631,7 +631,8 @@ def chatbot_clear():
     return jsonify({"message": "Chat history cleared successfully."})
 
 
+with app.app_context():
+    sync_admins_from_env()
+
 if __name__ == "__main__":
-    with app.app_context():
-        sync_admins_from_env()
     app.run(debug=True)
