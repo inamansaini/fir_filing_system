@@ -74,7 +74,7 @@ form input[type="text"]:focus,
 form input[type="password"]:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
 form button {
@@ -89,6 +89,12 @@ form button {
     font-family: var(--font-family);
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 45px;
 }
 
 form button:hover {
@@ -154,4 +160,42 @@ form button:active {
     h2 {
         font-size: 24px;
     }
+}
+
+
+
+
+.loader {
+    display: none;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #fff; 
+    width: 22px;
+    height: 22px;
+    animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+form button.loading .button-text {
+    display: none; 
+}
+
+form button.loading .loader {
+    display: block; 
+}
+
+form button.loading {
+    cursor: not-allowed;
+    background-color: var(--primary-color-dark);
+}
+
+
+form button.loading:hover {
+    background-color: var(--primary-color-dark);
 }
