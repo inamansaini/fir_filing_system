@@ -25,44 +25,43 @@
 
         <h3>Pending and Investigating FIRs</h3>
         {% if firs %}
-        <table class="assignment-table">
-            <thead>
-                <tr>
-                    <th>FIR ID</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Currently Assigned</th>
-                    <th>Assign Officer</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for fir in firs %}
-                <tr>
-                    <td>{{ fir._id }}</td>
-                    <td>{{ fir.category }}</td>
-                    <td>{{ fir.fir_status }}</td>
-                    <td><strong>{{ fir.get('assigned_officer_name', 'Unassigned') }}</strong></td>
-                    <td>
-                        <form action="{{ url_for('assign_officer') }}" method="POST">
-                            <input type="hidden" name="fir_id" value="{{ fir._id }}">
-                            <select name="officer_id" required>
-                                <option value="">Select an Officer...</option>
-                                {% for officer in station_officers %}
-                                    <option value="{{ officer.badge_id }}" {% if fir.get('assigned_officer_id') == officer.badge_id %}selected{% endif %}>
-                                        {{ officer.name }} ({{ officer.badge_id }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            </td>
-                    <td>
-                            <button type="submit">Assign</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="assignment-table">
+                <thead>
+                    <tr>
+                        <th>FIR ID</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Currently Assigned</th>
+                        <th>Assign Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fir in firs %}
+                    <tr>
+                      <td>{{ fir._id }}</td>
+                        <td>{{ fir.category }}</td>
+                        <td>{{ fir.fir_status }}</td>
+                        <td><strong>{{ fir.get('assigned_officer_name', 'Unassigned') }}</strong></td>
+                        <td>
+                            <form class="assignment-form" action="{{ url_for('assign_officer') }}" method="POST">
+                                <input type="hidden" name="fir_id" value="{{ fir._id }}">
+                                <select name="officer_id" required>
+                                    <option value="">Select an Officer...</option>
+                                    {% for officer in station_officers %}
+                                        <option value="{{ officer.badge_id }}" {% if fir.get('assigned_officer_id') == officer.badge_id %}selected{% endif %}>
+                                            {{ officer.name }} ({{ officer.badge_id }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit">Assign</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
         <p>There are no active FIRs that require an officer assignment at this station.</p>
         {% endif %}

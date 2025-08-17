@@ -110,6 +110,24 @@ async function viewDetails(firId) {
         const data = await response.json();
         const fir = data.fir;
         
+        // --- Start of Fix ---
+        let documentsHtml = '';
+        if (fir.supporting_documents && fir.supporting_documents.length > 0) {
+            documentsHtml = `
+                <hr>
+                <p><strong>Supporting Documents:</strong></p>
+                <ul>
+            `;
+            fir.supporting_documents.forEach((doc, index) => {
+                const fileName = doc.url.split('/').pop();
+                documentsHtml += `<li><a href="${doc.url}" target="_blank" rel="noopener noreferrer">Document ${index + 1}: ${fileName}</a></li>`;
+            });
+            documentsHtml += '</ul>';
+        } else {
+            documentsHtml = '<hr><p><strong>Supporting Documents:</strong> None provided.</p>';
+        }
+        // --- End of Fix ---
+        
         const detailsBody = document.getElementById('fir-details-body');
         detailsBody.innerHTML = `
             <p><strong>FIR ID:</strong> ${fir._id}</p>
@@ -128,6 +146,7 @@ async function viewDetails(firId) {
             <p><strong>Police Station:</strong> ${fir.police_station}</p>
             <p><strong>Description:</strong></p>
             <p>${fir.description}</p>
+            ${documentsHtml}
         `;
         
         document.getElementById('fir-details-modal').style.display = 'flex';

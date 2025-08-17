@@ -92,7 +92,6 @@
             const tabContents = document.querySelectorAll('.tab-content');
             const form = document.getElementById('loginForm');
 
-            // Function to switch tabs smoothly
             const switchTab = (tabToActivate) => {
                 const activeTabId = tabToActivate.dataset.tab;
 
@@ -107,14 +106,12 @@
                 document.getElementById(activeTabId + '-tab').classList.add('active');
             };
 
-            // Add event listeners to tabs
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     switchTab(tab);
                 });
             });
 
-            // Password visibility toggle
             document.querySelectorAll('.toggle-password').forEach(toggle => {
                 toggle.addEventListener('click', function () {
                     const passwordInput = this.previousElementSibling.previousElementSibling;
@@ -124,7 +121,6 @@
                 });
             });
 
-            // Toast notification function
             function showToast(message, isError = false) {
                 const toast = document.getElementById('toast');
                 toast.textContent = message;
@@ -134,33 +130,24 @@
                 }, 3000);
             }
             
-            // --- NEW CODE: ENTER KEY SUBMISSION ---
-            // This makes the Enter key trigger the login button click.
             const passwordInputs = document.querySelectorAll('#user-password, #admin-pass');
             passwordInputs.forEach(input => {
                 input.addEventListener('keydown', function(event) {
-                    // Check if the key pressed was 'Enter'
                     if (event.key === 'Enter') {
-                        // Prevent any default action (like a newline)
                         event.preventDefault();
-                        // Find the login button on the currently active tab and click it
                         document.querySelector('.tab-content.active .btn').click();
                     }
                 });
             });
-            // --- END OF NEW CODE ---
 
-
-            // --- IMPROVED FORM SUBMISSION LOGIC ---
             form.addEventListener('submit', async function(event) {
-                event.preventDefault(); // Prevents default browser submission
+                event.preventDefault();
 
                 const activeTab = document.querySelector('.tab-link.active').dataset.tab;
                 const submitButton = document.querySelector(`.tab-content.active .btn`);
                 
                 let url, payload, credentialsValid = false;
 
-                // Prepare payload and VALIDATE credentials based on the active tab
                 if (activeTab === 'user') {
                     url = '/user_login';
                     const usernameInput = document.getElementById('user-username');
@@ -174,7 +161,7 @@
                         };
                         credentialsValid = true;
                     }
-                } else { // Admin tab
+                } else {
                     url = '/admin_login';
                     const adminIdInput = document.getElementById('admin-id');
                     const adminPassInput = document.getElementById('admin-pass');
@@ -189,12 +176,10 @@
                     }
                 }
 
-                // If validation fails, stop the function
                 if (!credentialsValid) {
                     return;
                 }
 
-                // Show loader and disable button
                 submitButton.classList.add('loading');
                 submitButton.disabled = true;
 
@@ -216,13 +201,11 @@
                     console.error('Login Error:', error);
                     showToast('A network error occurred. Please try again.', true);
                 } finally {
-                    // Always re-enable the button and hide the loader
                     submitButton.classList.remove('loading');
                     submitButton.disabled = false;
                 }
             });
 
-            // Set initial active tab
             switchTab(document.querySelector('.tab-link.user'));
         });
     </script>
