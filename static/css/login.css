@@ -20,7 +20,7 @@
 
 html, body {
     height: 100%;
-    overflow: hidden; /* Prevents scrollbars on the body */
+    overflow: hidden;
 }
 
 body {
@@ -31,6 +31,8 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .page-wrapper {
@@ -53,18 +55,37 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
-
-/* Info Panel (Left Side) */
 .info-panel {
     flex-basis: 55%;
     padding: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: linear-gradient(rgba(29, 39, 54, 0.85), rgba(29, 39, 54, 0.98)), url('https://images.unsplash.com/photo-1629822434338-a1b61b40292b?w=800&q=80') no-repeat center center;
-    background-size: cover;
     position: relative;
     border-right: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.info-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(29, 39, 54, 0.85), rgba(29, 39, 54, 0.98)), url('https://images.unsplash.com/photo-1629822434338-a1b61b40292b?w=800&q=80') no-repeat center center;
+    background-size: cover;
+    transition: transform 0.4s ease-out;
+    z-index: 1;
+}
+
+.info-panel:hover::before {
+    transform: scale(1.03);
+}
+
+.info-panel > * {
+    position: relative;
+    z-index: 2;
 }
 
 .info-panel h1 {
@@ -120,13 +141,13 @@ body {
     left: 60px;
     color: var(--label-color);
     font-size: 0.9rem;
+    z-index: 2;
 }
 
 .location-info i {
     margin-right: 8px;
 }
 
-/* Form Panel (Right Side) */
 .form-panel {
     flex-basis: 45%;
     padding: 50px;
@@ -190,10 +211,13 @@ body {
 
 .tab-content.active {
     display: block;
-    /* The "animation" property has been removed from this rule */
+    animation: fadeInContent 0.5s ease;
 }
 
-/* The "@keyframes fadeInContent" rule has been completely removed */
+@keyframes fadeInContent {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 .form-group {
     position: relative;
@@ -202,32 +226,36 @@ body {
 
 .form-control {
     width: 100%;
-    padding: 15px 15px 15px 5px;
+    padding: 14px;
     background-color: transparent;
-    border: none;
-    border-bottom: 2px solid var(--border-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     color: var(--text-color);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .form-label {
     position: absolute;
     top: 15px;
-    left: 5px;
+    left: 10px;
     color: var(--label-color);
     pointer-events: none;
     transition: all 0.3s ease;
+    background-color: var(--form-background);
+    padding: 0 5px;
 }
 
 .form-control:focus + .form-label,
 .form-control:not(:placeholder-shown) + .form-label {
     top: -10px;
+    left: 10px;
     font-size: 0.8rem;
     color: var(--primary-color);
 }
@@ -235,7 +263,7 @@ body {
 .toggle-password {
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 15px;
     transform: translateY(-50%);
     cursor: pointer;
     color: var(--label-color);
@@ -268,7 +296,8 @@ body {
     transform: translateY(-2px);
 }
 .btn:active {
-    transform: translateY(0);
+    transform: translateY(1px);
+    filter: brightness(0.95);
 }
 
 .auth-links {
@@ -288,7 +317,6 @@ body {
     text-decoration: underline;
 }
 
-/* Loader and Toast styles */
 .loader { display: none; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top: 3px solid #fff; width: 22px; height: 22px; animation: spin 1s linear infinite; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .btn.loading .button-text { display: none; }
@@ -299,22 +327,21 @@ body {
 .toast.show { visibility: visible; opacity: 1; transform: translate(-50%, -20px); }
 .toast.error { background-color: var(--error-color); border-color: transparent; color: #fff; }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 992px) {
     html, body {
         height: auto;
-        overflow: auto; /* Allow scrolling on mobile where it's natural */
+        overflow: auto;
     }
     .page-wrapper {
         flex-direction: column;
-        height: auto; /* Allow height to be determined by content */
+        height: auto;
         min-height: 0;
         width: 100%;
         max-width: 500px;
         margin: 50px auto;
     }
     .info-panel {
-        display: none; 
+        display: none;
     }
     .form-panel {
         flex-basis: auto;
