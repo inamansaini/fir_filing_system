@@ -94,6 +94,53 @@ def sync_admins_from_env():
 
     print("Admin synchronization complete.")
 
+# --- NEW FUNCTION TO ADD OFFICERS ---
+def sync_officers_from_env():
+    """
+    Reads admin data from .env file and creates 5 police officers
+    for each police station, if they don't already exist.
+    """
+    print("Synchronizing officer data...")
+    try:
+        admin_count = int(os.getenv('ADMIN_COUNT', 0))
+    except (ValueError, TypeError):
+        print("Warning: ADMIN_COUNT in .env is not a valid number. Officer sync will be skipped.")
+        return
+
+    if admin_count == 0:
+        print("Warning: ADMIN_COUNT is 0. No officers will be created.")
+        return
+
+    for i in range(1, admin_count + 1):
+        admin_id = os.getenv(f'ADMIN_{i}_ID')
+        station_name = os.getenv(f'ADMIN_{i}_STATION')
+
+        if not admin_id or not station_name:
+            print(f"Warning: Missing ID or Station for ADMIN_{i}. Skipping officer creation for this station.")
+            continue
+        
+        # Generate a badge prefix from the admin ID, e.g., PSTOSHAM01 -> TOSHAM
+        badge_prefix = admin_id.replace("PS", "")
+        badge_prefix = ''.join([char for char in badge_prefix if not char.isdigit()])
+
+        for j in range(1, 6):  # Create 5 officers per station
+            station_short_name = station_name.split(',')[0]
+            officer_name = f"{station_short_name} Officer {j}"
+            badge_id = f"{badge_prefix}{j:02}"  # e.g., TOSHAM01, TOSHAM02
+
+            existing_officer = officers_collection.find_one({"badge_id": badge_id})
+
+            if not existing_officer:
+                officer_doc = {
+                    'name': officer_name,
+                    'badge_id': badge_id,
+                    'station_name': station_name,
+                    'is_active': True,
+                    'created_at': datetime.utcnow()
+                }
+                officers_collection.insert_one(officer_doc)
+                print(f"Created officer: {officer_name} ({badge_id}) for {station_name}")
+# --- END OF NEW FUNCTION ---
 
 @app.route('/')
 def login_page():
@@ -633,6 +680,7 @@ def chatbot_clear():
 
 with app.app_context():
     sync_admins_from_env()
+    sync_officers_from_env() # --- CALLING THE NEW FUNCTION ---
 
 if __name__ == "__main__":
     app.run(debug=True)

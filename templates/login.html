@@ -3,61 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <title>Login - Smart FIR Filing System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Sign In</h2>
-        <form id="loginForm">
-            <label for="role">Select Your Role:</label>
-            <select id="role" name="role">
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select>
-
-            <div id="user-login">
-                <label for="user-username">Username</label>
-                <input type="text" id="user-username" placeholder="Enter Username" required>
-                <label for="user-password">Password</label>
-                <input type="password" id="user-password" placeholder="Enter Password" required>
-                <button type="submit">
-                    <span class="button-text">Login</span>
-                    <div class="loader"></div>
-                </button>
-                <p class="register-link">Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+    <main class="page-wrapper">
+        <div class="info-panel">
+            <h1><i class="fas fa-balance-scale"></i> Smart FIR Filing System</h1>
+            <p class="tagline">A modern, secure, and efficient platform for citizens to report crimes and for law enforcement to manage cases effectively in Bhiwani, Haryana.</p>
+            <div class="features">
+                <h3>Key Features</h3>
+                <ul>
+                    <li><i class="fas fa-file-alt"></i> Easy FIR Lodging Process</li>
+                    <li><i class="fas fa-tasks"></i> Organized Case Handling for Police</li>
+                    <li><i class="fas fa-chart-line"></i> Clear Analytics and Reporting</li>
+                    <li><i class="fas fa-user-shield"></i> Your Data is Secure</li>
+                    <li><i class="fas fa-history"></i> Track Your FIR Status Online</li>
+                </ul>
             </div>
-
-            <div id="admin-login" style="display:none;">
-                <label for="admin-id">Admin ID</label>
-                <input type="text" id="admin-id" placeholder="Enter Admin ID" required>
-                <label for="admin-pass">Password</label>
-                <input type="password" id="admin-pass" placeholder="Enter Password" required>
-                <button type="submit">
-                    <span class="button-text">Login</span>
-                    <div class="loader"></div>
-                </button>
+            <div class="location-info">
+                 <p><i class="fas fa-map-marker-alt"></i> Serving the community of Bhiwani, Haryana Police</p>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="form-panel">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2>Welcome Back</h2>
+                    <p>Please select your login type.</p>
+                </div>
+                <div class="auth-tabs">
+                    <button class="tab-link user" data-tab="user">Citizen Login</button>
+                    <button class="tab-link admin" data-tab="admin">Police Login</button>
+                </div>
+
+                <form id="loginForm" novalidate>
+                    <div class="tab-content" id="user-tab">
+                        <div class="form-group">
+                            <input type="text" id="user-username" class="form-control" placeholder=" " required>
+                            <label for="user-username" class="form-label">Username</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="user-password" class="form-control" placeholder=" " required>
+                            <label for="user-password" class="form-label">Password</label>
+                            <i class="fas fa-eye toggle-password"></i>
+                        </div>
+                        <button type="submit" class="btn">
+                            <span class="button-text">Login</span>
+                            <div class="loader"></div>
+                        </button>
+                        <div class="auth-links">
+                            <p>Don't have an account? <a href="{{ url_for('register') }}">Register Now</a></p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="admin-tab">
+                        <div class="form-group">
+                            <input type="text" id="admin-id" class="form-control" placeholder=" " required>
+                            <label for="admin-id" class="form-label">Admin ID</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="admin-pass" class="form-control" placeholder=" " required>
+                            <label for="admin-pass" class="form-label">Password</label>
+                             <i class="fas fa-eye toggle-password"></i>
+                        </div>
+                        <button type="submit" class="btn">
+                             <span class="button-text">Login</span>
+                             <div class="loader"></div>
+                        </button>
+                         <div class="auth-links">
+                            <p>Access for authorized Bhiwani Police personnel only.</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
     <div id="toast" class="toast"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const roleSelect = document.getElementById('role');
-            const userLoginDiv = document.getElementById('user-login');
-            const adminLoginDiv = document.getElementById('admin-login');
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const form = document.getElementById('loginForm');
 
-            const userUsername = document.getElementById('user-username');
-            const userPassword = document.getElementById('user-password');
-            const adminId = document.getElementById('admin-id');
-            const adminPass = document.getElementById('admin-pass');
+            // Function to switch tabs smoothly
+            const switchTab = (tabToActivate) => {
+                const activeTabId = tabToActivate.dataset.tab;
 
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                tabToActivate.classList.add('active');
+                
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(activeTabId + '-tab').classList.add('active');
+            };
+
+            // Add event listeners to tabs
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab);
+                });
+            });
+
+            // Password visibility toggle
+            document.querySelectorAll('.toggle-password').forEach(toggle => {
+                toggle.addEventListener('click', function () {
+                    const passwordInput = this.previousElementSibling.previousElementSibling;
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+
+            // Toast notification function
             function showToast(message, isError = false) {
                 const toast = document.getElementById('toast');
                 toast.textContent = message;
@@ -67,75 +134,69 @@
                 }, 3000);
             }
             
-            function updateFormState(selectedRole) {
-                if (selectedRole === 'user') {
-                    userLoginDiv.style.display = 'block';
-                    adminLoginDiv.style.display = 'none';
-                    userUsername.disabled = false;
-                    userPassword.disabled = false;
-                    adminId.disabled = true;
-                    adminPass.disabled = true;
-                } else { 
-                    userLoginDiv.style.display = 'none';
-                    adminLoginDiv.style.display = 'block';
-                    userUsername.disabled = true;
-                    userPassword.disabled = true;
-                    adminId.disabled = false;
-                    adminPass.disabled = false;
-                }
-            }
-
-            roleSelect.addEventListener('change', function() {
-                updateFormState(this.value);
+            // --- NEW CODE: ENTER KEY SUBMISSION ---
+            // This makes the Enter key trigger the login button click.
+            const passwordInputs = document.querySelectorAll('#user-password, #admin-pass');
+            passwordInputs.forEach(input => {
+                input.addEventListener('keydown', function(event) {
+                    // Check if the key pressed was 'Enter'
+                    if (event.key === 'Enter') {
+                        // Prevent any default action (like a newline)
+                        event.preventDefault();
+                        // Find the login button on the currently active tab and click it
+                        document.querySelector('.tab-content.active .btn').click();
+                    }
+                });
             });
-            
-            updateFormState(roleSelect.value);
+            // --- END OF NEW CODE ---
 
-            loginForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
 
-                const selectedRole = roleSelect.value;
+            // --- IMPROVED FORM SUBMISSION LOGIC ---
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevents default browser submission
+
+                const activeTab = document.querySelector('.tab-link.active').dataset.tab;
+                const submitButton = document.querySelector(`.tab-content.active .btn`);
                 
-                
-                const submitButton = selectedRole === 'user'
-                    ? userLoginDiv.querySelector('button[type="submit"]')
-                    : adminLoginDiv.querySelector('button[type="submit"]');
+                let url, payload, credentialsValid = false;
 
-               
+                // Prepare payload and VALIDATE credentials based on the active tab
+                if (activeTab === 'user') {
+                    url = '/user_login';
+                    const usernameInput = document.getElementById('user-username');
+                    const passwordInput = document.getElementById('user-password');
+                    if (!usernameInput.value.trim() || !passwordInput.value.trim()) {
+                        showToast('Please enter both username and password.', true);
+                    } else {
+                        payload = {
+                            username: usernameInput.value.trim(),
+                            password: passwordInput.value.trim()
+                        };
+                        credentialsValid = true;
+                    }
+                } else { // Admin tab
+                    url = '/admin_login';
+                    const adminIdInput = document.getElementById('admin-id');
+                    const adminPassInput = document.getElementById('admin-pass');
+                    if (!adminIdInput.value.trim() || !adminPassInput.value.trim()) {
+                        showToast('Please enter both Admin ID and Password.', true);
+                    } else {
+                        payload = {
+                            admin_id: adminIdInput.value.trim(),
+                            password: adminPassInput.value.trim()
+                        };
+                        credentialsValid = true;
+                    }
+                }
+
+                // If validation fails, stop the function
+                if (!credentialsValid) {
+                    return;
+                }
+
+                // Show loader and disable button
                 submitButton.classList.add('loading');
                 submitButton.disabled = true;
-
-                let url;
-                let payload;
-
-                if (selectedRole === 'user') {
-                    const username = userUsername.value.trim();
-                    const password = userPassword.value.trim();
-
-                    if (!username || !password) {
-                        showToast('Please enter both username and password.', true);
-                       
-                        submitButton.classList.remove('loading');
-                        submitButton.disabled = false;
-                        return;
-                    }
-                    url = '/user_login';
-                    payload = { username, password };
-
-                } else { 
-                    const adminIdValue = adminId.value.trim();
-                    const adminPassValue = adminPass.value.trim();
-
-                    if (!adminIdValue || !adminPassValue) {
-                        showToast('Please enter Admin ID and Password.', true);
-                       
-                        submitButton.classList.remove('loading');
-                        submitButton.disabled = false;
-                        return;
-                    }
-                    url = '/admin_login';
-                    payload = { admin_id: adminIdValue, password: adminPassValue };
-                }
 
                 try {
                     const response = await fetch(url, {
@@ -143,24 +204,26 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-
                     const data = await response.json();
 
                     if (response.ok) {
                         showToast(data.message || 'Login successful!');
                         window.location.href = data.redirect;
                     } else {
-                        showToast(data.error || 'Invalid credentials.', true);
+                        showToast(data.message || data.error || 'Invalid credentials.', true);
                     }
                 } catch (error) {
                     console.error('Login Error:', error);
                     showToast('A network error occurred. Please try again.', true);
                 } finally {
-                    
+                    // Always re-enable the button and hide the loader
                     submitButton.classList.remove('loading');
                     submitButton.disabled = false;
                 }
             });
+
+            // Set initial active tab
+            switchTab(document.querySelector('.tab-link.user'));
         });
     </script>
 </body>
